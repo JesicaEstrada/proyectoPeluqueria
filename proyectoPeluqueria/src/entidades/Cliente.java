@@ -17,7 +17,7 @@ public class Cliente {
     private String nombre_cliente;
     private String apellido_cliente;
     private LocalDate fechaNacimiento_cliente;
-    private String telefono_cliente;
+    private int telefono_cliente;
     private String correo_cliente;
     private String direccion_cliente;
     private boolean estado_cliente;
@@ -25,7 +25,7 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(int dni_cliente, String nombre_cliente, String apellido_cliente, LocalDate fechaNacimiento_cliente, String telefono_cliente, String correo_cliente, String direccion_cliente, boolean estado_cliente) {
+    public Cliente(int dni_cliente, String nombre_cliente, String apellido_cliente, LocalDate fechaNacimiento_cliente, int telefono_cliente, String correo_cliente, String direccion_cliente, boolean estado_cliente) {
         this.dni_cliente = dni_cliente;
         this.nombre_cliente = nombre_cliente;
         this.apellido_cliente = apellido_cliente;
@@ -36,7 +36,7 @@ public class Cliente {
         this.estado_cliente = estado_cliente;
     }
 
-    public Cliente(int id_cliente, int dni_cliente, String nombre_cliente, String apellido_cliente, LocalDate fechaNacimiento_cliente, String telefono_cliente, String correo_cliente, String direccion_cliente, boolean estado_cliente) {
+    public Cliente(int id_cliente, int dni_cliente, String nombre_cliente, String apellido_cliente, LocalDate fechaNacimiento_cliente, int telefono_cliente, String correo_cliente, String direccion_cliente, boolean estado_cliente) {
         this.id_cliente = id_cliente;
         this.dni_cliente = dni_cliente;
         this.nombre_cliente = nombre_cliente;
@@ -89,11 +89,11 @@ public class Cliente {
         this.fechaNacimiento_cliente = fechaNacimiento_cliente;
     }
 
-    public String getTelefono_cliente() {
+    public int getTelefono_cliente() {
         return telefono_cliente;
     }
 
-    public void setTelefono_cliente(String telefono_cliente) {
+    public void setTelefono_cliente(int telefono_cliente) {
         this.telefono_cliente = telefono_cliente;
     }
 

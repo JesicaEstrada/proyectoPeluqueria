@@ -16,7 +16,7 @@ public class Empleado {
     private int dni_empleado;
     private String nombre_empleado;
     private String apellido_empleado;
-    private String telefono_empleado;
+    private int telefono_empleado;
     private String correo_empleado;
     private String cargo_empleado;
     private boolean estado_empleado;
@@ -24,7 +24,7 @@ public class Empleado {
     public Empleado() {
     }
 
-    public Empleado(int dni_empleado, String nombre_empleado, String apellido_empleado, String telefono_empleado, String correo_empleado, String cargo_empleado, boolean estado_empleado) {
+    public Empleado(int dni_empleado, String nombre_empleado, String apellido_empleado, int telefono_empleado, String correo_empleado, String cargo_empleado, boolean estado_empleado) {
         this.dni_empleado = dni_empleado;
         this.nombre_empleado = nombre_empleado;
         this.apellido_empleado = apellido_empleado;
@@ -34,7 +34,7 @@ public class Empleado {
         this.estado_empleado = estado_empleado;
     }
 
-    public Empleado(int id_empleado, int dni_empleado, String nombre_empleado, String apellido_empleado, String telefono_empleado, String correo_empleado, String cargo_empleado, boolean estado_empleado) {
+    public Empleado(int id_empleado, int dni_empleado, String nombre_empleado, String apellido_empleado, int telefono_empleado, String correo_empleado, String cargo_empleado, boolean estado_empleado) {
         this.id_empleado = id_empleado;
         this.dni_empleado = dni_empleado;
         this.nombre_empleado = nombre_empleado;
@@ -73,11 +73,11 @@ public class Empleado {
         this.apellido_empleado = apellido_empleado;
     }
 
-    public String getTelefono_empleado() {
+    public int getTelefono_empleado() {
         return telefono_empleado;
     }
 
-    public void setTelefono_empleado(String telefono_empleado) {
+    public void setTelefono_empleado(int telefono_empleado) {
         this.telefono_empleado = telefono_empleado;
     }
 
