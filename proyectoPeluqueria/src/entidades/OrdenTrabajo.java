@@ -74,6 +74,10 @@ public class OrdenTrabajo {
         return id_orden_trabajo;
     }
 
+    public void setId_orden_trabajo(int id_orden_trabajo) {
+        this.id_orden_trabajo = id_orden_trabajo;
+    }
+    
     public Cliente getCliente() {
         return cliente;
     }

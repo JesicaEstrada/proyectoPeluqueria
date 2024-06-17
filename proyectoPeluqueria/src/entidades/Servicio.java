@@ -41,7 +41,11 @@ public class Servicio {
         return id_servicio;
     }
 
+    public void setId_servicio(int id_servicio) {
+        this.id_servicio = id_servicio;
+    }
 
+    
     public String getNombre_servicio() {
         return nombre_servicio;
     }

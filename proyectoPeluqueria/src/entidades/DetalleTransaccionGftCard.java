@@ -36,6 +36,10 @@ public class DetalleTransaccionGftCard {
         return id_detalleTransaccionGftCard;
     }
 
+    public void setId_detalleTransaccionGftCard(int id_detalleTransaccionGftCard) {
+        this.id_detalleTransaccionGftCard = id_detalleTransaccionGftCard;
+    }
+    
   
     public GiftCards getGiftCards() {
         return giftCards;

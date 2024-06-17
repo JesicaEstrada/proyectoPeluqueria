@@ -51,6 +51,11 @@ public class Cliente {
     public int getId_cliente() {
         return id_cliente;
     }
+
+    public void setId_cliente(int id_cliente) {
+        this.id_cliente = id_cliente;
+    }
+    
     
     public int getDni_cliente() {
         return dni_cliente;

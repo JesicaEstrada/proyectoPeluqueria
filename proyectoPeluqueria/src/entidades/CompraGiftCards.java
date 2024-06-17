@@ -36,6 +36,10 @@ public class CompraGiftCards {
         return giftCards;
     }
 
+    public void setId_compra(int id_compra) {
+        this.id_compra = id_compra;
+    }
+    
     public void setGiftCards(GiftCards giftCards) {
         this.giftCards = giftCards;
     }

@@ -40,6 +40,10 @@ public class Transacion {
         return id_transaccion;
     }
 
+    public void setId_transaccion(int id_transaccion) {
+        this.id_transaccion = id_transaccion;
+    }
+    
 
     public Cliente getCliente() {
         return cliente;

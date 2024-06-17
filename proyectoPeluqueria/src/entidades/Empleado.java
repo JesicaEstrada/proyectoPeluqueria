@@ -49,6 +49,10 @@ public class Empleado {
         return dni_empleado;
     }
 
+    public void setId_empleado(int id_empleado) {
+        this.id_empleado = id_empleado;
+    }
+    
     public void setDni_empleado(int dni_empleado) {
         this.dni_empleado = dni_empleado;
     }

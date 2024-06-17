@@ -41,6 +41,10 @@ public class GiftCards {
         return id_gift_cards;
     }
 
+    public void setId_gift_cards(int id_gift_cards) {
+        this.id_gift_cards = id_gift_cards;
+    }
+    
 
     public String getCodigo_gift_cards() {
         return codigo_gift_cards;
