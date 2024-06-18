@@ -11,24 +11,24 @@ import java.time.LocalDate;
  *
  * @author Jesica
  */
-public class Transacion {
+public class Transaccion {
     private int id_transaccion;
     private Cliente cliente;
     private LocalDate fecha_transaccion;
     private double total_transaccion;
     private boolean estado_transaccion;
 
-    public Transacion() {
+    public Transaccion() {
     }
 
-    public Transacion(Cliente cliente, LocalDate fecha_transaccion, double total_transaccion, boolean estado_transaccion) {
+    public Transaccion(Cliente cliente, LocalDate fecha_transaccion, double total_transaccion, boolean estado_transaccion) {
         this.cliente = cliente;
         this.fecha_transaccion = fecha_transaccion;
         this.total_transaccion = total_transaccion;
         this.estado_transaccion = estado_transaccion;
     }
 
-    public Transacion(int id_transaccion, Cliente cliente, LocalDate fecha_transaccion, double total_transaccion, boolean estado_transaccion) {
+    public Transaccion(int id_transaccion, Cliente cliente, LocalDate fecha_transaccion, double total_transaccion, boolean estado_transaccion) {
         this.id_transaccion = id_transaccion;
         this.cliente = cliente;
         this.fecha_transaccion = fecha_transaccion;
@@ -39,7 +39,6 @@ public class Transacion {
     public int getId_transaccion() {
         return id_transaccion;
     }
-
     public void setId_transaccion(int id_transaccion) {
         this.id_transaccion = id_transaccion;
     }
