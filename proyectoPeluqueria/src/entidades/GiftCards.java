@@ -15,24 +15,26 @@ public class GiftCards {
     private int id_gift_cards;
     private String codigo_gift_cards;
     private double valor_gift_cards;
-    private double valorRestante_gift_cards=valor_gift_cards;
+    private double valorRestante_gift_cards;
     private LocalDate fechaExpiracion_gift_cards;
     private boolean estado_gift_cards;
 
     public GiftCards() {
     }
 
-    public GiftCards(String codigo_gift_cards, double valor_gift_cards, LocalDate fechaExpiracion_gift_cards, boolean estado_gift_cards) {
+    public GiftCards(String codigo_gift_cards, double valor_gift_cards,double valorRestante_gift_cards, LocalDate fechaExpiracion_gift_cards, boolean estado_gift_cards) {
         this.codigo_gift_cards = codigo_gift_cards;
         this.valor_gift_cards = valor_gift_cards;
+        this.valorRestante_gift_cards= valorRestante_gift_cards;
         this.fechaExpiracion_gift_cards = fechaExpiracion_gift_cards;
         this.estado_gift_cards = estado_gift_cards;
     }
 
-    public GiftCards(int id_gift_cards, String codigo_gift_cards, double valor_gift_cards, LocalDate fechaExpiracion_gift_cards, boolean estado_gift_cards) {
+    public GiftCards(int id_gift_cards, String codigo_gift_cards, double valor_gift_cards,double valorRestante_gift_cards, LocalDate fechaExpiracion_gift_cards, boolean estado_gift_cards) {
         this.id_gift_cards = id_gift_cards;
         this.codigo_gift_cards = codigo_gift_cards;
-        this.valor_gift_cards = valor_gift_cards;
+        this.valor_gift_cards = valor_gift_cards;  
+        this.valorRestante_gift_cards= valorRestante_gift_cards;        
         this.fechaExpiracion_gift_cards = fechaExpiracion_gift_cards;
         this.estado_gift_cards = estado_gift_cards;
     }
