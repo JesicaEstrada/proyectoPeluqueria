@@ -109,6 +109,11 @@ public class Empleado {
         return id_empleado;
     }
 
+    @Override
+    public String toString() {
+        return  nombre_empleado + ", "+ apellido_empleado ;
+    }
+    
   
     
 }

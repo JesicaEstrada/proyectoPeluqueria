@@ -33,7 +33,7 @@ public class ServicioData {
             /*Este método de la conexión (con) crea un objeto PreparedStatement para enviar parámetros a la base de datos.*/
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, servicio.getNombre_servicio());
-            ps.setInt(2, servicio.getDuracion_servicio());
+            ps.setString(2, servicio.getDuracion_servicio());
             ps.setDouble(3, servicio.getPrecio_servicio());
             ps.setString(4,servicio.getDescripcion_servicio());
             ps.setBoolean(5, servicio.isEstado_servicio());
@@ -67,7 +67,7 @@ public class ServicioData {
                 servicio = new Servicio();
                 servicio.setId_servicio(rs.getInt("idServicio"));
                 servicio.setNombre_servicio(rs.getString("nombre"));
-                servicio.setDuracion_servicio(rs.getInt("duracion"));
+                servicio.setDuracion_servicio(rs.getString("duracion"));
                 servicio.setPrecio_servicio(rs.getDouble("precio"));
                 servicio.setDescripcion_servicio(rs.getString("descripcion"));
                 servicio.setEstado_servicio(true);
@@ -92,7 +92,7 @@ public class ServicioData {
                 Servicio servicio = new Servicio();                
                 servicio.setId_servicio(rs.getInt("idServicio"));
                 servicio.setNombre_servicio(rs.getString("nombre"));
-                servicio.setDuracion_servicio(rs.getInt("duracion"));
+                servicio.setDuracion_servicio(rs.getString("duracion"));
                 servicio.setPrecio_servicio(rs.getDouble("precio"));
                 servicio.setDescripcion_servicio(rs.getString("descripcion"));
                 servicio.setEstado_servicio(true);

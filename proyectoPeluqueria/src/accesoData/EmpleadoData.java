@@ -177,9 +177,9 @@ public class EmpleadoData {
         return empleados;
     }
     
-    public List<Empleado> listarClientesActivos() {
+    public List<Empleado> listarEmpleadosActivos() {
         ArrayList<Empleado> empleados = new ArrayList<>();
-       String sql = "SELECT idEmpleado, dni, nombre, apellido,telefono, email, cargo, estado FROM empleado"
+       String sql = "SELECT idEmpleado, dni, nombre, apellido,telefono, mail, cargo, estado FROM empleado"
                 + " WHERE estado=1";
 
         try {
@@ -194,7 +194,7 @@ public class EmpleadoData {
                 empleado.setNombre_empleado(rs.getString("nombre"));
                 empleado.setApellido_empleado(rs.getString("apellido"));           
                 empleado.setTelefono_empleado(rs.getInt("telefono"));
-                empleado.setCorreo_empleado(rs.getString("email"));
+                empleado.setCorreo_empleado(rs.getString("mail"));
                 empleado.setCargo_empleado(rs.getString("cargo"));                
                 empleado.setEstado_empleado(true);
                 

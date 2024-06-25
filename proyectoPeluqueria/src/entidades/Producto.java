@@ -98,7 +98,7 @@ public class Producto {
 
     @Override
     public String toString() {
-        return  "codigo: " + codigo_producto + ", nombre:" + nombre_producto + '}';
+        return  codigo_producto + ", " + nombre_producto ;
     }
     
     

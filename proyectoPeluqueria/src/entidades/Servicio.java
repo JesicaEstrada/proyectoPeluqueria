@@ -5,6 +5,8 @@
  */
 package entidades;
 
+import java.time.LocalTime;
+
 /**
  *
  * @author Jesica
@@ -12,7 +14,7 @@ package entidades;
 public class Servicio {
     private int id_servicio;
     private String nombre_servicio;
-    private int duracion_servicio;
+     private String duracion_servicio;
     private double precio_servicio;
     private String descripcion_servicio;
     private boolean estado_servicio;
@@ -20,7 +22,7 @@ public class Servicio {
     public Servicio() {
     }
 
-    public Servicio(String nombre_servicio, int duracion_servicio, double precio_servicio, String descripcion_servicio, boolean estado_servicio) {
+    public Servicio(String nombre_servicio, String duracion_servicio, double precio_servicio, String descripcion_servicio, boolean estado_servicio) {
         this.nombre_servicio = nombre_servicio;
         this.duracion_servicio = duracion_servicio;
         this.precio_servicio = precio_servicio;
@@ -28,7 +30,7 @@ public class Servicio {
         this.estado_servicio = estado_servicio;
     }
 
-    public Servicio(int id_servicio, String nombre_servicio, int duracion_servicio, double precio_servicio, String descripcion_servicio, boolean estado_servicio) {
+    public Servicio(int id_servicio, String nombre_servicio, String duracion_servicio, double precio_servicio, String descripcion_servicio, boolean estado_servicio) {
         this.id_servicio = id_servicio;
         this.nombre_servicio = nombre_servicio;
         this.duracion_servicio = duracion_servicio;
@@ -54,11 +56,11 @@ public class Servicio {
         this.nombre_servicio = nombre_servicio;
     }
 
-    public int getDuracion_servicio() {
+    public String getDuracion_servicio() {
         return duracion_servicio;
     }
 
-    public void setDuracion_servicio(int duracion_servicio) {
+    public void setDuracion_servicio(String duracion_servicio) {
         this.duracion_servicio = duracion_servicio;
     }
 
@@ -85,7 +87,7 @@ public class Servicio {
     public void setEstado_servicio(boolean estado_servicio) {
         this.estado_servicio = estado_servicio;
     }
-
+    
     @Override
     public String toString() {
         return  nombre_servicio + ", "+ descripcion_servicio + '}';
