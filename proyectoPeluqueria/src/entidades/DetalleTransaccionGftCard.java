@@ -12,23 +12,20 @@ package entidades;
 public class DetalleTransaccionGftCard {
     private int id_detalleTransaccionGftCard;
     private GiftCards giftCards;
-    private CompraGiftCards compraGiftCards;
     private double montoUtilizado;
 
     public DetalleTransaccionGftCard() {
     }
 
-    public DetalleTransaccionGftCard(GiftCards giftCards, CompraGiftCards compraGiftCards, double montoUtilizado) {
+    public DetalleTransaccionGftCard(GiftCards giftCards, double montoUtilizado) {
         this.giftCards = giftCards;
-        this.compraGiftCards = compraGiftCards;
         this.montoUtilizado = montoUtilizado;
     }
     
     
-    public DetalleTransaccionGftCard(int id_detalleTransaccionGftCard, GiftCards giftCards, CompraGiftCards compraGiftCards, double montoUtilizado) {
+    public DetalleTransaccionGftCard(int id_detalleTransaccionGftCard, GiftCards giftCards, double montoUtilizado) {
         this.id_detalleTransaccionGftCard = id_detalleTransaccionGftCard;
         this.giftCards = giftCards;
-        this.compraGiftCards = compraGiftCards;
         this.montoUtilizado = montoUtilizado;
     }
 
@@ -47,14 +44,6 @@ public class DetalleTransaccionGftCard {
 
     public void setGiftCards(GiftCards giftCards) {
         this.giftCards = giftCards;
-    }
-
-    public CompraGiftCards getCompraGiftCards() {
-        return compraGiftCards;
-    }
-
-    public void setCompraGiftCards(CompraGiftCards compraGiftCards) {
-        this.compraGiftCards = compraGiftCards;
     }
 
     public double getMontoUtilizado() {

@@ -8,6 +8,7 @@ package accesoData;
 import entidades.Servicio;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -65,7 +66,7 @@ public class ServicioData {
             while (rs.next()) {
                 servicio = new Servicio();
                 servicio.setId_servicio(rs.getInt("idServicio"));
-                servicio.setNombre_servicio(rs.getString("nombre_clase"));
+                servicio.setNombre_servicio(rs.getString("nombre"));
                 servicio.setDuracion_servicio(rs.getInt("duracion"));
                 servicio.setPrecio_servicio(rs.getDouble("precio"));
                 servicio.setDescripcion_servicio(rs.getString("descripcion"));
@@ -78,4 +79,31 @@ public class ServicioData {
         }
         return servicios;
     }
+     public List<Servicio> listarServiciosActivos() {
+        ArrayList<Servicio> servicios = new ArrayList<>();
+        String sql = "SELECT idServicio, nombre, duracion, precio, descripcion, estado "
+                + " FROM servicio WHERE estado=1";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Servicio servicio = new Servicio();                
+                servicio.setId_servicio(rs.getInt("idServicio"));
+                servicio.setNombre_servicio(rs.getString("nombre"));
+                servicio.setDuracion_servicio(rs.getInt("duracion"));
+                servicio.setPrecio_servicio(rs.getDouble("precio"));
+                servicio.setDescripcion_servicio(rs.getString("descripcion"));
+                servicio.setEstado_servicio(true);
+
+                servicios.add(servicio);
+            }
+        } catch (SQLException ex) {
+//            Logger.getLogger(SocioData.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "error al acceder a la tabla servicios");
+        }
+        return servicios;
+    }
+     
 }

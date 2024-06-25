@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import pruebas.*;
+
 
 /**
  *
@@ -106,5 +106,34 @@ public class GiftCardsData {
             JOptionPane.showMessageDialog(null, "error al acceder a la tabla giftCards");
         }
         return giftCards;
+    }
+    
+    public void actualizarValor(int id,double valor){
+        String sqlObtenerMontoGiftCard = "SELECT ValorRestante FROM giftcards WHERE IdGiftCards = ?";
+        String sqlActualizar="UPDATE giftcards SET ValorRestante = ValorRestante - ? WHERE IdGiftCards = ?;";
+        
+        try {
+            PreparedStatement psObtenerMontoGiftCard = con.prepareStatement(sqlObtenerMontoGiftCard);
+            PreparedStatement psActualizar = con.prepareStatement(sqlActualizar);
+            
+            psObtenerMontoGiftCard.setInt(1, id);
+            ResultSet rs = psObtenerMontoGiftCard.executeQuery();
+            if (rs.next()) {
+                double disponible = rs.getDouble("valorRestante");
+                if (disponible < valor) {
+                    throw new SQLException("Saldo insuficiente en la gift card.");
+                }
+                
+                psActualizar.setDouble(1, valor);
+                psActualizar.setInt(2, id);
+                psActualizar.executeUpdate();
+            }else {
+                
+                JOptionPane.showMessageDialog(null,"Gift card no encontrada.");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Gift Cards");
+        }
     }
 }

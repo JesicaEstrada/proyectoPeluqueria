@@ -11,6 +11,7 @@ package entidades;
  */
 public class Producto {
     private int id_Producto;
+    private String codigo_producto;
     private String nombre_producto;
     private String descripcion_producto;
     private double precio_producto;
@@ -20,16 +21,18 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(String nombre_producto, String descripcion_producto, double precio_producto, int stock_producto, boolean estado_producto) {
+    public Producto(String codigo, String nombre_producto, String descripcion_producto, double precio_producto, int stock_producto, boolean estado_producto) {
+        this.codigo_producto = codigo;
         this.nombre_producto = nombre_producto;
         this.descripcion_producto = descripcion_producto;
         this.precio_producto = precio_producto;
         this.stock_producto = stock_producto;
         this.estado_producto = estado_producto;
     }
-
-    public Producto(int id_Producto, String nombre_producto, String descripcion_producto, double precio_producto, int stock_producto, boolean estado_producto) {
+    
+    public Producto(int id_Producto, String codigo, String nombre_producto, String descripcion_producto, double precio_producto, int stock_producto, boolean estado_producto) {
         this.id_Producto = id_Producto;
+        this.codigo_producto = codigo;
         this.nombre_producto = nombre_producto;
         this.descripcion_producto = descripcion_producto;
         this.precio_producto = precio_producto;
@@ -37,6 +40,7 @@ public class Producto {
         this.estado_producto = estado_producto;
     }
 
+    
     public int getId_Producto() {
         return id_Producto;
     }
@@ -82,6 +86,19 @@ public class Producto {
 
     public void setEstado_producto(boolean estado_producto) {
         this.estado_producto = estado_producto;
+    }
+
+    public String getCodigo_producto() {
+        return codigo_producto;
+    }
+
+    public void setCodigo_producto(String codigo) {
+        this.codigo_producto = codigo;
+    }
+
+    @Override
+    public String toString() {
+        return  "codigo: " + codigo_producto + ", nombre:" + nombre_producto + '}';
     }
     
     

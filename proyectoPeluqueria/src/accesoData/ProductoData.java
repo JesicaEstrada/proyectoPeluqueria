@@ -5,7 +5,7 @@
  */
 package accesoData;
 
-import pruebas.*;
+
 import entidades.Producto;
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,17 +24,18 @@ public class ProductoData {
          con = Conexion.getConexion();
     }
     public void cargarProduco(Producto producto) {
-        String sql = "INSERT INTO producto (nombre, descrpcion, precio, stock, estado) "
-                + "VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO producto (codigo,nombre, descripcion, precio, stock, estado) "
+                + "VALUES (?,?,?,?,?,?)";
 
         try {
             /*Este método de la conexión (con) crea un objeto PreparedStatement para enviar parámetros a la base de datos.*/
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,producto.getNombre_producto());
-            ps.setString(2,producto.getDescripcion_producto());
-            ps.setDouble(3, producto.getPrecio_producto());
-            ps.setInt(4, producto.getStock_producto());
-            ps.setBoolean(5, producto.isEstado_producto());
+            ps.setString(1,producto.getCodigo_producto());
+            ps.setString(2,producto.getNombre_producto());
+            ps.setString(3,producto.getDescripcion_producto());
+            ps.setDouble(4, producto.getPrecio_producto());
+            ps.setInt(5, producto.getStock_producto());
+            ps.setBoolean(6, producto.isEstado_producto());
 
             ps.executeUpdate();
 
@@ -51,9 +52,34 @@ public class ProductoData {
 //            Logger.getLogger(SocioData.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void modificarProducto(Producto producto) {
+
+        String sql = "UPDATE  producto SET codigo=?,nombre=?, descripcion=?, precio=?, stock=?, estado=? "
+                 + "WHERE idProducto = ?";
+
+        try {
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, producto.getCodigo_producto());
+            ps.setString(2, producto.getNombre_producto());
+            ps.setString(3,producto.getDescripcion_producto());
+            ps.setDouble(4, producto.getPrecio_producto());
+            ps.setInt(5, producto.getStock_producto());
+            ps.setBoolean(6, producto.isEstado_producto());
+         
+            int resultado = ps.executeUpdate();
+            if (resultado > 0) {
+
+                JOptionPane.showMessageDialog(null, "Producto modificado.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla producto. " + e);
+        }
+    }
     public List<Producto> listarProductosActivos() {
         ArrayList<Producto> productos = new ArrayList<>();
-        String sql = "SELECT idProducto, nombre, descrpcion, precio, stock, estado"
+        String sql = "SELECT idProducto,codigo, nombre, descripcion, precio, stock, estado"
                 + " FROM producto WHERE estado=1";
 
         try {
@@ -62,7 +88,8 @@ public class ProductoData {
 
             while (rs.next()) {
                 Producto producto = new Producto();                
-                producto.setId_Producto(rs.getInt("idProducto"));                
+                producto.setId_Producto(rs.getInt("idProducto"));         
+                producto.setCodigo_producto(rs.getString("codigo"));
                 producto.setNombre_producto(rs.getString("nombre"));
                 producto.setDescripcion_producto(rs.getString("descripcion"));
                 producto.setPrecio_producto(rs.getDouble("precio"));
@@ -81,7 +108,7 @@ public class ProductoData {
     public List<Producto> listarProductosActivosXNombre(String nombre) {
         ArrayList<Producto> productos = new ArrayList<>();
         
-        String sql = "SELECT idProducto, nombre, descrpcion, precio, stock, estado FROM producto "
+        String sql = "SELECT idProducto,codigo, nombre, descripcion, precio, stock, estado FROM producto "
                 + "WHERE LOWER(nombre) like LOWER(?)";
         Producto producto = null;
         try {
@@ -94,6 +121,7 @@ public class ProductoData {
                 do {
                     producto = new Producto();                
                     producto.setId_Producto(rs.getInt("idProducto"));                
+                    producto.setCodigo_producto(rs.getString("codigo"));
                     producto.setNombre_producto(rs.getString("nombre"));
                     producto.setDescripcion_producto(rs.getString("descripcion"));
                     producto.setPrecio_producto(rs.getDouble("precio"));
@@ -113,4 +141,40 @@ public class ProductoData {
         return productos;
     }
     
+    public void AjusteBaja(String codigo, int cantidad){
+        String sql="UPDATE `producto` SET `stock`= stock - ? WHERE codigo=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, cantidad);
+            ps.setString(2,codigo);
+            int resultado = ps.executeUpdate();
+            if (resultado == 1) {
+                JOptionPane.showMessageDialog(null, "Ajuste de Baja ");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla producto");
+        }
+    }
+    public void AjusteAlta(String codigo, int cantidad){
+        String sql="UPDATE `producto` SET `stock`= stock + ? WHERE codigo=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, cantidad);
+            ps.setString(2,codigo);
+            int resultado = ps.executeUpdate();
+            if (resultado == 1) {
+                JOptionPane.showMessageDialog(null, "Ajuste de Alta");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla producto");
+        }
+    }
+    public static double calcularCostoTotal(List<Producto> productos) {
+        double costoTotal = 0.0;
+        for (Producto producto : productos) {
+            costoTotal += producto.getPrecio_producto();
+        }
+       
+        return costoTotal;
+    }
 }

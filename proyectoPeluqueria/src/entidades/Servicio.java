@@ -85,6 +85,11 @@ public class Servicio {
     public void setEstado_servicio(boolean estado_servicio) {
         this.estado_servicio = estado_servicio;
     }
+
+    @Override
+    public String toString() {
+        return  nombre_servicio + ", "+ descripcion_servicio + '}';
+    }
     
     
 }
