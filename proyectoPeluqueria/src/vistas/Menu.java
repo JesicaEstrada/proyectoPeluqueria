@@ -84,10 +84,10 @@ public class Menu extends javax.swing.JFrame {
         escritorio.removeAll();
         escritorio.repaint();
 
-        prueba Falumno = new prueba();
-        Falumno.setVisible(true);
-        escritorio.add(Falumno);
-        escritorio.moveToFront(Falumno);
+        prueba Forden = new prueba();
+        Forden.setVisible(true);
+        escritorio.add(Forden);
+        escritorio.moveToFront(Forden);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

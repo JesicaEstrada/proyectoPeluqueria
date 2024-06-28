@@ -80,7 +80,7 @@ public class ProductoData {
     public List<Producto> listarProductosActivos() {
         ArrayList<Producto> productos = new ArrayList<>();
         String sql = "SELECT idProducto,codigo, nombre, descripcion, precio, stock, estado"
-                + " FROM producto WHERE estado=1";
+                + " FROM producto WHERE estado=1 AND stock > 0";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -141,12 +141,12 @@ public class ProductoData {
         return productos;
     }
     
-    public void AjusteBaja(String codigo, int cantidad){
-        String sql="UPDATE `producto` SET `stock`= stock - ? WHERE codigo=?";
+    public void AjusteBaja(Producto producto, int cantidad){
+        String sql="UPDATE `producto` SET `stock`= stock - ? WHERE codigo=? ";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, cantidad);
-            ps.setString(2,codigo);
+            ps.setString(2,producto.getCodigo_producto());
             int resultado = ps.executeUpdate();
             if (resultado == 1) {
                 JOptionPane.showMessageDialog(null, "Ajuste de Baja ");
@@ -169,12 +169,5 @@ public class ProductoData {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla producto");
         }
     }
-    public static double calcularCostoTotal(List<Producto> productos) {
-        double costoTotal = 0.0;
-        for (Producto producto : productos) {
-            costoTotal += producto.getPrecio_producto();
-        }
-       
-        return costoTotal;
-    }
+    
 }

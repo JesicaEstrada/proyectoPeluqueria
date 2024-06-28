@@ -9,67 +9,73 @@ import accesoData.ClienteData;
 import accesoData.EmpleadoData;
 import accesoData.ProductoData;
 import accesoData.ServicioData;
+import com.toedter.calendar.JDateChooser;
 import entidades.Cliente;
 import entidades.Empleado;
 import entidades.Producto;
 import entidades.Servicio;
+import java.sql.Date;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
-
+import java.util.Map;
 /**
  *
  * @author Jesica
  */
 public class prueba extends javax.swing.JInternalFrame {
+    private DefaultTableModel modeloProducto = new DefaultTableModel();
+    private DefaultTableModel modeloServicio = new DefaultTableModel();
+    
     private List<Producto> listaP;
     private List<Servicio> listaS;
     private List<Empleado> listaE;
-    private Cliente cliente ;
+    
+    private ArrayList<Producto> productos = new ArrayList<>();
+    private ArrayList<Servicio> servicios= new ArrayList<>();
+    private ArrayList<Empleado> empleados= new ArrayList<>();
+    
+    private Cliente cliente= new Cliente() ;
+    
     private EmpleadoData empData= new EmpleadoData();
-    private ClienteData cliData ;
-    private ProductoData prdData ;
-    private ServicioData srvData;
-    private DefaultTableModel modeloProducto;
-    private DefaultTableModel modeloServicio;
-    private ArrayList<Producto> productos;
-    private ArrayList<Servicio> servicios;
-    private ArrayList<Empleado> empleados;
+    private ClienteData cliData = new ClienteData();
+    private ProductoData prdData= new ProductoData() ;
+    private ServicioData srvData= new ServicioData();
+    
     private double sumaTotal;
     private LocalTime duracionTotal = LocalTime.of(0, 0);
     
-
+    private Set<Date> fechasBloqueadas= new HashSet<>();
+    private JDateChooser dateChooser;
     
-
+    private Map<LocalTime, Integer> horarioCount= new HashMap<>();
     /**
      * Creates new form prueba
      */
     public prueba() {
         initComponents();
-       
-        modeloProducto = new DefaultTableModel();
-        modeloServicio = new DefaultTableModel();
-
-        productos = new ArrayList<>();
-        servicios = new ArrayList<>();
-        empleados = new ArrayList<>();
-        cliente = new Cliente();
-        cliData = new ClienteData();
-        prdData = new ProductoData();
-        srvData = new ServicioData();
+        dateChooser = new JDateChooser();
+        add(dateChooser);
+        
         listaP= prdData.listarProductosActivos();
         listaS= srvData.listarServiciosActivos();
         listaE= empData.listarEmpleadosActivos();
+        
         cargarEmpleados();
         cargarHorarios();
         cargarProducto();
         cargarServicios();
+        
         armarCabeceraTablaProducto();
         armarCabeceraTablaServicios();
         
@@ -110,9 +116,10 @@ public class prueba extends javax.swing.JInternalFrame {
         jbBuscar = new javax.swing.JButton();
         jtNombre = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jcbHorario1 = new javax.swing.JComboBox<>();
         jlClase3 = new javax.swing.JLabel();
         jcbEmpleado = new javax.swing.JComboBox<>();
+        jdcFechaTurno = new com.toedter.calendar.JDateChooser();
+        jbConfirmar = new javax.swing.JButton();
 
         setClosable(true);
 
@@ -255,7 +262,7 @@ public class prueba extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Apellido:");
 
-        jLabel6.setText("Seleccione horario:");
+        jLabel6.setText("Horario:");
 
         jcbHorario.setEnabled(false);
         jcbHorario.addItemListener(new java.awt.event.ItemListener() {
@@ -280,19 +287,7 @@ public class prueba extends javax.swing.JInternalFrame {
 
         jtNombre.setEnabled(false);
 
-        jLabel8.setText("Seleccione horario:");
-
-        jcbHorario1.setEnabled(false);
-        jcbHorario1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jcbHorario1ItemStateChanged(evt);
-            }
-        });
-        jcbHorario1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbHorario1ActionPerformed(evt);
-            }
-        });
+        jLabel8.setText("Fecha:");
 
         jlClase3.setText("Empleado");
 
@@ -302,14 +297,17 @@ public class prueba extends javax.swing.JInternalFrame {
             }
         });
 
+        jbConfirmar.setText("Confirmar");
+        jbConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbConfirmarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(duracion)
-                .addGap(40, 40, 40))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addComponent(jlClase)
@@ -326,20 +324,21 @@ public class prueba extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(391, 391, 391)
                         .addComponent(total)))
-                .addGap(228, 228, 228)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 20, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 20, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(duracion)
+                        .addGap(91, 91, 91))))
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jlClase3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -362,9 +361,16 @@ public class prueba extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jcbHorario1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jcbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jdcFechaTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jlClase3)
+                        .addGap(26, 26, 26)
+                        .addComponent(jcbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbConfirmar)
+                .addGap(150, 150, 150))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -384,43 +390,48 @@ public class prueba extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlClase3)
+                            .addComponent(jcbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(50, 50, 50)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jcbServicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlClase2)
+                            .addComponent(jlClase)
+                            .addComponent(jcbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(total)
+                            .addComponent(duracion)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jcbHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbHorario1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlClase3)
-                    .addComponent(jcbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addComponent(duracion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbServicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jlClase2)
-                    .addComponent(jlClase)
-                    .addComponent(jcbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(total)
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jdcFechaTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(60, 60, 60)
+                .addComponent(jbConfirmar)
+                .addContainerGap(136, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 297, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 298, Short.MAX_VALUE)))
         );
 
         pack();
@@ -476,18 +487,27 @@ public class prueba extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_jbBuscarActionPerformed
 
-    private void jcbHorario1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbHorario1ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jcbHorario1ItemStateChanged
-
-    private void jcbHorario1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbHorario1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jcbHorario1ActionPerformed
-
     private void jcbEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEmpleadoActionPerformed
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jcbEmpleadoActionPerformed
+
+    private void jbConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbConfirmarActionPerformed
+        // TODO add your handling code here:
+        LocalTime selectedHorario = (LocalTime) jcbHorario.getSelectedItem();
+        if (selectedHorario != null) {
+            int count = horarioCount.getOrDefault(selectedHorario, 0) + 1;
+            horarioCount.put(selectedHorario, count);
+            if (count >= 4) {
+                jcbHorario.removeItem(selectedHorario);
+            }
+        }
+        for(Producto item : productos){
+            prdData.AjusteBaja(item);
+        }
+  
+       
+    }//GEN-LAST:event_jbConfirmarActionPerformed
     private void cargarEmpleados(){
         for(Empleado item : listaE){
             jcbEmpleado.addItem(item);
@@ -509,15 +529,13 @@ public class prueba extends javax.swing.JInternalFrame {
         Producto selec= (Producto)jcbProducto.getSelectedItem();
 
         if ( selec.getId_Producto() != 1) {
-            int cantidad = (int) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 4);
+           
             productos.add(selec);
-            sumaTotal += cantidad * selec.getPrecio_producto();
+            sumaTotal +=selec.getPrecio_producto();
             modeloProducto.addRow(new Object[]{selec.getCodigo_producto(),selec.getNombre_producto(),selec.getDescripcion_producto(),selec.getPrecio_producto()});
 //            total.setText("Suma Total: " + sumaTotal);
             total.setText("Suma Total: " + String.format("%.2f", sumaTotal));
-        }       
-            
-
+        }   
     }
     private void cargarDatosServicios(){
         Servicio selec= (Servicio)jcbServicio.getSelectedItem();
@@ -585,13 +603,35 @@ public class prueba extends javax.swing.JInternalFrame {
         LocalTime hora = LocalTime.of(8, 0);
         while (hora.isBefore(LocalTime.of(20, 0))) {
             horarios.add(hora);
-            hora = hora.plusHours(1);
+            hora = hora.plusMinutes(20);
         }
         for (LocalTime horario : horarios) {
             jcbHorario.addItem(horario);
+            horarioCount.put(horario, 0);
         }
 
     }
+//    private void bloquearFecha(Date date) {
+//        if (date != null) {
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(date);
+//            int year = cal.get(Calendar.YEAR);
+//            int month = cal.get(Calendar.MONTH);
+//            int day = cal.get(Calendar.DAY_OF_MONTH);
+//            fechasBloqueadas.add(date);
+//            
+//            // Aquí puedes agregar la lógica para bloquear la fecha
+//            // Por ejemplo, guardarla en una lista de fechas bloqueadas
+//            System.out.println("Fecha bloqueada: " + date);
+//        }
+//    }
+//   
+//
+//    private boolean esFechaBloqueada(Date date) {
+//        return fechasBloqueadas.contains(date);
+//    }
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel duracion;
     private javax.swing.JInternalFrame jInternalFrame1;
@@ -604,12 +644,13 @@ public class prueba extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton jbBuscar;
+    private javax.swing.JButton jbConfirmar;
     private javax.swing.JComboBox<Empleado> jcbEmpleado;
     private javax.swing.JComboBox<LocalTime> jcbHorario;
-    private javax.swing.JComboBox<LocalTime> jcbHorario1;
     private javax.swing.JComboBox<Producto> jcbProducto;
     private javax.swing.JComboBox<Producto> jcbProducto1;
     private javax.swing.JComboBox<Servicio> jcbServicio;
+    private com.toedter.calendar.JDateChooser jdcFechaTurno;
     private javax.swing.JLabel jjj1;
     private javax.swing.JLabel jlClase;
     private javax.swing.JLabel jlClase1;
